@@ -27,8 +27,6 @@ function ProductsHistoryScreen() {
 
 export default function App() {
   const productController = new ProductController(new DatabaseDTO());
-  console.log(productController);
-  productController.createProductTableInDBIfNotExists();
 
   return (
     <NavigationContainer>
