@@ -2,20 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import CameraBarcodeScanner from './app/components/CameraBarcodeScanner';
 import DatabaseDTO from './app/database/DatabaseDTO';
 import ProductController from './app/controller/ProductController';
+import BarcodeScannerScreen from './app/components/BarcodeScannerScreen';
 
 const Tab = createBottomTabNavigator();
-
-function BarcodeScannerScreen(props) {
-  return (
-    <View style={styles.container}>
-      <CameraBarcodeScanner controller={props.controller}></CameraBarcodeScanner>
-      <StatusBar style="auto" />
-    </View>
-  );  
-}
 
 function ProductsHistoryScreen() {
   return (
@@ -39,6 +30,7 @@ export default function App() {
         />
         <Tab.Screen options={{unmountOnBlur: true}} name="History" component={ProductsHistoryScreen} />
       </Tab.Navigator>
+      <StatusBar style="auto" />
     </NavigationContainer>
   );
 }
