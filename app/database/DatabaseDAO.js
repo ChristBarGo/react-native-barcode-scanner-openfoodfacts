@@ -2,24 +2,73 @@ import * as SQLite from 'expo-sqlite'
 
 const DATABASE_URL = "../assets/BBDD.db";
 
-const db = SQLite.openDatabase(DATABASE_URL);
+export default class DatabaseDAO {
+    constructor() {
+        this.db = SQLite.openDatabase(DATABASE_URL);
 
-export function executeSimpleQuery(sql) {
-    db.transaction(tx => {
-        tx.executeSql(sql, null,
-        (txObj, resultSet) => {
-            return txObj
-        }),
-        (txObj, error) => console.error(error);
-    })
-}
+        this.db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () =>
+            console.log('Foreign keys turned on')
+        );
+    }
 
-export function executeParameterizedQuery(sql, params) {
-    db.transaction(tx => {
-        tx.executeSql(sql, params,
-        (txObj, resultSet) => {
-            return txObj
-        }),
-        (txObj, error) => console.error(error);
-    })
+    executeQuery(query, params=[], success=()=>{}, error=(_)=>{}) {
+        if (this.db && this.db != null) {
+            this.db.transaction(tx => {
+                tx.executeSql(query, params, success, error);
+            });
+        }
+        else {
+            console.log("No connection to database");
+        }
+    }
+
+    executeSimpleQuery(sql) {
+        console.log("executeSimpleQuery, sql: ", sql);
+        
+        return new Promise((resolve, reject) => {
+            this.executeQuery(sql, [], 
+                (_, resultSet) => {
+                    resolve(true);
+                    console.log(resultSet);
+                },
+                (error) => {
+                    console.error(error);
+                    reject(error);
+                }
+            )
+        })
+    }
+
+    executeSimpleSelectQuery(sql) {
+        console.log("executeSimpleSelectQuery, sql: ", sql);
+
+        return new Promise((resolve, reject) => {
+            this.executeQuery(sql, [], 
+                (_, resultSet) => {
+                    resolve(resultSet.rows._array)
+                    console.log(resultSet);
+                },
+                (error) => {
+                    console.error(error);
+                    reject(error);
+                }
+            )
+        })
+    }
+
+    executeParameterizedQuery(sql, params) {
+        console.log("executeParameterizedQuery, sql: ", sql);
+        return new Promise((resolve, reject) => {
+            this.executeQuery(sql, params, 
+                (_, resultSet) => {
+                    resolve(true);
+                    console.log(resultSet);
+                },
+                (error) => {
+                    console.error(error);
+                    reject(error);
+                }
+            )
+        })
+    }
 }

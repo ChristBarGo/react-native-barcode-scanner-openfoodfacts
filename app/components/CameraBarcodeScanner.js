@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import getProductInfoByBarcode from '../api/ProductRestApi';
 
-export default function CameraBarcodeScanner() {
+export default function CameraBarcodeScanner(props) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -22,14 +21,7 @@ export default function CameraBarcodeScanner() {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert("Bar code with type ${type} and data ${data} has been scanned!");
-    getProductInfoByBarcode(data)
-      .then(product => {
-        console.log(product);
-        alert("Product info: ${product}");
-      })
-      .catch(error => {
-        console.error(error);
-      })
+    props.controller.saveProductToRepository(data);
   };
 
   // This block will be executed while we are asking for camera permission
