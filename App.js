@@ -5,16 +5,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DatabaseDTO from './app/database/DatabaseDTO';
 import ProductController from './app/controller/ProductController';
 import BarcodeScannerScreen from './app/components/BarcodeScannerScreen';
+import ProductsHistoryScreen from './app/components/ProductsHistoryScreen';
 
 const Tab = createBottomTabNavigator();
-
-function ProductsHistoryScreen() {
-  return (
-    <View style={styles.container}>
-      <Text>Products History Screen</Text>
-    </View>
-  );  
-}
 
 export default function App() {
   const productController = new ProductController(new DatabaseDTO());
@@ -23,12 +16,12 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen 
-          name="Scanner"
+          name="Product Barcode Scanner"
           options={{unmountOnBlur: true}}
           children={() => 
             <BarcodeScannerScreen controller={productController}></BarcodeScannerScreen>} 
         />
-        <Tab.Screen options={{unmountOnBlur: true}} name="History" component={ProductsHistoryScreen} />
+        <Tab.Screen options={{unmountOnBlur: true}} name="Scanned Products" component={ProductsHistoryScreen} />
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
