@@ -18,8 +18,10 @@ export default class DatabaseDAO {
         let data = null;
 
         if (refPath && refPath != null) {
-            ref.on(refPath, 
+            const databaseRef = ref(this.firebaseDB, refPath);
+            onValue(databaseRef, 
                 (snapshot) => {
+                    console.log(snapshot.val());
                     data = snapshot.val();
                 },
                 (errorObject) => {

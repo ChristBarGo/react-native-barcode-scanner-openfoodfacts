@@ -4,16 +4,16 @@ import DatabaseDAO from "./DatabaseDAO";
 export default class ProductDatabaseDto {
     constructor() {
         this.databaseDAO = new DatabaseDAO();
-        this.productRef = "products/";
+        this.productsRef = "products/";
     }
     
     saveProductToDatabase(product) {
         if (product && product != null && product instanceof Product && product.id && product.id != null) {
-            this.databaseDAO.saveData(this.productRef, product.id, product);
+            this.databaseDAO.saveObject(this.productsRef, product.id, product);
         }
     }
 
     getAllProductsFromDatabase() {
-        return this.databaseDAO.getAllData(this.productRef);
+        return this.databaseDAO.getAllData(this.productsRef);
     }
 }

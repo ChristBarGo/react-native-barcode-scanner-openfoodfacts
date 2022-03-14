@@ -25,7 +25,7 @@ export default class ProductController {
   }
 
   getAllProductsFromRepository() {
-    return this.databaseDto.getAllProductsFromRepository();
+    return this.databaseDto.getAllProductsFromDatabase();
   }
 
   mapProductReceivedToModel(productFromApi) {
