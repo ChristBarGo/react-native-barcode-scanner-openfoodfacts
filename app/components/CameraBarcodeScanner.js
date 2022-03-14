@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, ActivityIndicator } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function CameraBarcodeScanner(props) {
@@ -28,7 +28,7 @@ export default function CameraBarcodeScanner(props) {
   if (hasCameraPermission === null) {
     return  (
       <View style={styles.container}>
-        <Text>Requesting for camera permission</Text>
+        <ActivityIndicator size="large" color="gray" />
       </View>
     )
   }

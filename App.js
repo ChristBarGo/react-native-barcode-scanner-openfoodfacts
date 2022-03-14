@@ -33,10 +33,11 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen 
           name="Scanner"
+          options={{unmountOnBlur: true}}
           children={() => 
             <BarcodeScannerScreen controller={productController}></BarcodeScannerScreen>} 
         />
-        <Tab.Screen name="History" component={ProductsHistoryScreen} />
+        <Tab.Screen options={{unmountOnBlur: true}} name="History" component={ProductsHistoryScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
