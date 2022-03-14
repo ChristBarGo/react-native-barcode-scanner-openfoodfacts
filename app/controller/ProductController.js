@@ -1,5 +1,5 @@
 import getProductInfoByBarcode from "../api/ProductRestApi";
-import { Product } from "../model/Product";
+import Product from "../model/Product";
 
 export default class ProductController {
   constructor(databaseDto) {
@@ -21,16 +21,11 @@ export default class ProductController {
   }
 
   saveScannedProductToRepository(product) {
-    this.databaseDto.insertIntoProductTable(product.id, product.name, product.brand, product.imageUrl, product.ingredients, 
-                                            product.nutritionalImageUrl, product.categories);
-  }
-
-  createProductTableInDBIfNotExists() {
-    this.databaseDto.createProductTableIfNotExists();
+    this.databaseDto.saveProductToDatabase(product);
   }
 
   getAllProductsFromRepository() {
-    return this.databaseDto.getAllProducts();
+    return this.databaseDto.getAllProductsFromRepository();
   }
 
   mapProductReceivedToModel(productFromApi) {
