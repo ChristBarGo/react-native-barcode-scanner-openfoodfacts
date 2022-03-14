@@ -14,6 +14,7 @@ export default class ProductDatabaseDto {
     }
 
     getAllProductsFromDatabase() {
-        return this.databaseDAO.getAllData(this.productsRef);
+        const data = this.databaseDAO.getAllData(this.productsRef);
+        return data;
     }
 }

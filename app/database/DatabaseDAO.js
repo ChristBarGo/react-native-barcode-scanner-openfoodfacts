@@ -21,7 +21,6 @@ export default class DatabaseDAO {
             const databaseRef = ref(this.firebaseDB, refPath);
             onValue(databaseRef, 
                 (snapshot) => {
-                    console.log(snapshot.val());
                     data = snapshot.val();
                 },
                 (errorObject) => {
@@ -29,5 +28,7 @@ export default class DatabaseDAO {
                 }
             );
         }
+
+        return data;
     }
 }

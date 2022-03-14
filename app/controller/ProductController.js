@@ -13,7 +13,7 @@ export default class ProductController {
         const productModelObj = this.mapProductReceivedToModel(productFromApi);
         console.log(productModelObj);
         this.saveScannedProductToRepository(productModelObj);
-        console.log(this.getAllProductsFromRepository());
+        console.log("DB data from ProductController: ", this.getAllProductsFromRepository());
       })
       .catch(error => {
         console.error(error);
@@ -21,7 +21,9 @@ export default class ProductController {
   }
 
   saveScannedProductToRepository(product) {
-    this.databaseDto.saveProductToDatabase(product);
+    if (product && product != null) {
+      this.databaseDto.saveProductToDatabase(product);
+    }
   }
 
   getAllProductsFromRepository() {
@@ -29,19 +31,25 @@ export default class ProductController {
   }
 
   mapProductReceivedToModel(productFromApi) {
-    const productObject = productFromApi.product;
+    let product = null;
 
-    const id = productObject.id;
-    const name = productObject.generic_name != '' ? productObject.generic_name : id + " - " + productObject.brands;
-    const brand = productObject.brands == "" ? "No brand data " : productObject.brands;
-    const imageUrl = productObject.image_front_url;
-    const ingredients = productObject.ingredients != undefined ? productObject.ingredients : "No ingredients data";
-    const ingredientsUrl = productObject.image_ingredients_url;
-    const categories = productObject.categories;
-    const nutritionalImageUrl = productObject.image_nutrition_url;
+    if (productFromApi && productFromApi != null) {
+      const productObject = productFromApi.product;
 
-    const product = new Product(id, name, brand, imageUrl, ingredients, nutritionalImageUrl);
-    product.categories = categories;
+      if (productObject && productObject != null) {
+        const id = productObject.id;
+        const name = productObject.generic_name != '' || productObject.generic_name == undefined ? productObject.generic_name : id + " - " + productObject.brands;
+        const brand = productObject.brands == undefined || productObject.brands == "" ? "No brand data " : productObject.brands;
+        const imageUrl = productObject.image_front_url;
+        const ingredients = productObject.ingredients != undefined ? productObject.ingredients.map(ingredient => ingredient.id) : "No ingredients data";
+        const ingredientsUrl = productObject.image_ingredients_url;
+        const categories = productObject.categories;
+        const nutritionalImageUrl = productObject.image_nutrition_url;
+
+        product = new Product(id, name, brand, imageUrl, ingredients, nutritionalImageUrl);
+        product.categories = categories;
+      }
+    }
 
     return product;
   }
