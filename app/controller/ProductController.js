@@ -9,11 +9,8 @@ export default class ProductController {
   async saveProductToRepository(barcodeData) {
     await getProductInfoByBarcode(barcodeData)
       .then(productFromApi => {
-        console.log(productFromApi);
         const productModelObj = this.mapProductReceivedToModel(productFromApi);
-        console.log(productModelObj);
         this.saveScannedProductToRepository(productModelObj);
-        console.log("DB data from ProductController: ", this.getAllProductsFromRepository());
       })
       .catch(error => {
         console.error(error);

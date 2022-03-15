@@ -21,7 +21,12 @@ export default function App() {
           children={() => 
             <BarcodeScannerScreen controller={productController}></BarcodeScannerScreen>} 
         />
-        <Tab.Screen options={{unmountOnBlur: true}} name="Scanned Products" component={ProductsHistoryScreen} />
+        <Tab.Screen 
+          options={{unmountOnBlur: true}} 
+          name="Scanned Products" 
+          children={() =>
+            <ProductsHistoryScreen controller={productController}></ProductsHistoryScreen>}
+          />
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
