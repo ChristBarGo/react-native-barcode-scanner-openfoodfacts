@@ -5,6 +5,7 @@ import ProductListCardItem from './ProductListCardItem';
 export default function ProductsHistoryScreen(props) {
   const [selectedId, setSelectedId] = useState(null); // To force re-render flatlist
   const [productList, setProductList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const controller = props.controller;
 
@@ -13,6 +14,7 @@ export default function ProductsHistoryScreen(props) {
     productsFromRepository
     .then(result => {
       setProductList(mapProductsFromRepositoryToArrayOfObjects(result));
+      setIsLoading(false);
     })
     .catch(error => {
       console.log("An Error when receiving products from database: ", error);
@@ -28,7 +30,7 @@ export default function ProductsHistoryScreen(props) {
     </ProductListCardItem>
   );
 
-  if (!productList || productList == undefined || productList.length == 0) {
+  if (!isLoading && (!productList || productList == undefined || productList.length == 0)) {
     return  (
       <View style={styles.noProductScanned}>
         <Text style={{ fontSize: 25 }}>No Product Scanned</Text>
@@ -39,12 +41,16 @@ export default function ProductsHistoryScreen(props) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {isLoading 
+        ? <ActivityIndicator style={styles.loadingViewIndicator} size="large" color="gray" /> 
+        :
       <FlatList
         data = {productList}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         extraData={productList}>
       </FlatList>
+      }
     </SafeAreaView>
   );  
 }
@@ -63,6 +69,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         margin: 0
+    },
+
+    loadingViewIndicator: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
     },
 
     productFlatList: {
