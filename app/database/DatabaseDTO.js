@@ -13,8 +13,8 @@ export default class ProductDatabaseDto {
         }
     }
 
-    getAllProductsFromDatabase() {
-        const data = this.databaseDAO.getAllData(this.productsRef);
-        return data;
+    async getAllProductsFromDatabase() {
+        const productsData = await this.databaseDAO.getAllData(this.productsRef);
+        return productsData;
     }
 }

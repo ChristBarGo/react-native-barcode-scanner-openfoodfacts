@@ -23,8 +23,11 @@ export default class ProductController {
     }
   }
 
-  getAllProductsFromRepository() {
-    return this.databaseDto.getAllProductsFromDatabase();
+  async getAllProductsFromRepository() {
+    const productsFromDatabase = await this.databaseDto.getAllProductsFromDatabase();
+
+    console.log("Products from controller: " ,productsFromDatabase);
+    return productsFromDatabase;
   }
 
   mapProductReceivedToModel(productFromApi) {

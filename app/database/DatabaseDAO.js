@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue, set, push } from 'firebase/database';
+import { getDatabase, onValue, ref, set } from 'firebase/database';
 import { firebaseApp } from '../config/FirebaseConfig';
 
 export default class DatabaseDAO {
@@ -15,7 +15,33 @@ export default class DatabaseDAO {
     }
 
     getAllData(refPath) {
-        let data = null;
+        return new Promise((resolve, reject) => {
+            const onData = snapshot => resolve(snapshot.val());
+            const onError = error => reject(error);
+
+            const databaseRef = ref(this.firebaseDB, refPath);
+
+            onValue(databaseRef, onData, onError);
+
+        });
+        /*let data;
+
+        if (refPath && refPath != null) {
+            const databaseRef = ref(this.firebaseDB, refPath);
+            
+            onValue(databaseRef, 
+                (snapshot) => {
+                    data = snapshot.val();
+                },
+                (errorObject) => {
+                    console.error("An error occurred when retrieving data from firebase: ", errorObject.name);
+                }
+            );
+        }
+
+        return data;*/
+
+        /*let data = null;
 
         if (refPath && refPath != null) {
             const databaseRef = ref(this.firebaseDB, refPath);
@@ -29,6 +55,6 @@ export default class DatabaseDAO {
             );
         }
 
-        return data;
+        return data;*/
     }
 }

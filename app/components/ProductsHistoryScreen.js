@@ -6,11 +6,19 @@ export default function ProductsHistoryScreen(props) {
   const [selectedId, setSelectedId] = useState(null); // To force re-render flatlist
   const [productList, setProductList] = useState([]);
 
-  useEffect(() => {
-    const productsFromRepository = props.controller.getAllProductsFromRepository();
-    setProductList(mapProductsFromRepositoryToArrayOfObjects(productsFromRepository));
-  })
+  const controller = props.controller;
 
+  useEffect(() => {
+    const productsFromRepository = controller.getAllProductsFromRepository();
+    productsFromRepository
+    .then(result => {
+      setProductList(mapProductsFromRepositoryToArrayOfObjects(result));
+    })
+    .catch(error => {
+      console.log("An Error when receiving products from database: ", error);
+    });
+  }, [])
+ 
   const renderItem = ({ item }) => (
     <ProductListCardItem 
       name={item.name} 
@@ -20,11 +28,9 @@ export default function ProductsHistoryScreen(props) {
     </ProductListCardItem>
   );
 
-  console.log("Product List Data: ", productList);
-
-  if (productList || productList == undefined || productList.length == 0) {
+  if (!productList || productList == undefined || productList.length == 0) {
     return  (
-      <View style={styles.container}>
+      <View style={styles.noProductScanned}>
         <Text style={{ fontSize: 25 }}>No Product Scanned</Text>
         <Text style={{ fontSize: 15, fontStyle: 'italic'}}>Scan a product first from product barcode scanner tab</Text>
       </View>
@@ -37,7 +43,7 @@ export default function ProductsHistoryScreen(props) {
         data = {productList}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        extraData={selectedId}>
+        extraData={productList}>
       </FlatList>
     </SafeAreaView>
   );  
@@ -55,12 +61,20 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'skyblue',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         margin: 0
     },
 
     productFlatList: {
       flex: 1,
       flexDirection: 'row'
+    },
+
+    noProductScanned: {
+      flex: 1,
+        backgroundColor: 'skyblue',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 0
     }
 });
