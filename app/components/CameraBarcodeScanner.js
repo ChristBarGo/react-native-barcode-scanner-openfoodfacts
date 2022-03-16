@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, ActivityIndicator, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function CameraBarcodeScanner(props) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -10,6 +11,7 @@ export default function CameraBarcodeScanner(props) {
 
   const controller = props.controller;
   const navigation = props.navigation;
+  const isFocused = useIsFocused();
 
   const requestCameraPermission = () => {
     (async () => {
@@ -91,19 +93,24 @@ export default function CameraBarcodeScanner(props) {
     )
   }
 
+  const CameraView = (
+      <View style={styles.barcodeScannerBox}>
+        {isFocused &&
+          <Camera
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            autoFocus={Camera.Constants.AutoFocus.on}
+            style={StyleSheet.absoluteFill}
+          />
+        }
+      </View>
+    )
   // Load BarcodeScanner View when there is camera permission enabled
   return (
     <SafeAreaView style={styles.container}>
       {isLoadingProduct
       ? LoadingView
       :
-        <View style={styles.barcodeScannerBox}>
-          <Camera
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            autoFocus={Camera.Constants.AutoFocus.auto}
-            style={StyleSheet.absoluteFill}
-          />
-        </View>
+        CameraView
       }
     </SafeAreaView>
   );
