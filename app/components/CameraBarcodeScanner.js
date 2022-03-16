@@ -24,6 +24,7 @@ export default function CameraBarcodeScanner(props) {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
+    console.log("HabdleBarScanned");
     setScanned(true);
     setIsLoadingProduct(true);
 
@@ -41,6 +42,8 @@ export default function CameraBarcodeScanner(props) {
       }
     }
     else {
+      setIsLoadingProduct(false);
+      setScanned(false);
       alert("Bar code with type and data ${data} is not a valid product");
     }
   };

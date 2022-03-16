@@ -11,14 +11,17 @@ export default class ProductController {
       getProductInfoByBarcode(barcodeData)
       .then(productFromApi => {
         const productModelObj = this.mapProductReceivedToModel(productFromApi, barcodeData);
-        const scannedProductIsSaved = this.saveScannedProductToRepository(productModelObj);
-
-        if (scannedProductIsSaved) {
-          resolve(productModelObj.id);
-        }
-        else {
-          resolve(false);
-        }
+        
+        this.saveScannedProductToRepository(productModelObj)
+        .then(scannedProductIsSaved => {
+          if (scannedProductIsSaved) {
+            resolve(productModelObj.id);
+          }
+          else {
+            resolve(false);
+          }
+        });
+     
       })
       .catch(error => {
         resolve(false);
