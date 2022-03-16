@@ -34,6 +34,7 @@ export default function CameraBarcodeScanner(props) {
 
       if (productFromRepository) {
         setIsLoadingProduct(false);
+        setScanned(false);
         navigation.navigate('Product Item', {
           'item': productFromRepository
         })
@@ -70,15 +71,16 @@ export default function CameraBarcodeScanner(props) {
   // Load BarcodeScanner View when there is camera permission enabled
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.barcodeScannerBox}>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={StyleSheet.absoluteFill}
-        />
-      </View>
-      <View style={styles.scanAgainButton}>
-        {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)}/>}
-      </View>
+      {isLoadingProduct
+      ? LoadingView
+      :
+        <View style={styles.barcodeScannerBox}>
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={StyleSheet.absoluteFill}
+          />
+        </View>
+      }
     </SafeAreaView>
   );
 }
