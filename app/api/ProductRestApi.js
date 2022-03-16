@@ -1,6 +1,6 @@
 
 
-const OPENFOODFACTS_API_BASE_URL = "https://world.openfoodfacts.org/api/v0/product/";
+const OPENFOODFACTS_API_BASE_URL = "https://world.openfoodfacts.org/api/v2/product/";
 const PRODUCT_API_FILE_EXTENSION = ".json";
 
 export default async function getProductInfoByBarcode(barcode) {

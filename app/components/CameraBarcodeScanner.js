@@ -53,9 +53,9 @@ export default function CameraBarcodeScanner(props) {
 
     console.log("Scanned: ", scanned);
 
-    const savedProductId = await controller.saveProductToRepository(data);
-    if (savedProductId) {
-      const productFromRepository = await controller.getProductFromRepositoryById(savedProductId);
+    const saveProductCode = await controller.saveProductToRepository(data);
+    if (saveProductCode) {
+      const productFromRepository = await controller.getProductFromRepositoryByCode(saveProductCode);
 
       if (productFromRepository) {
         navigation.navigate('Product Item', {

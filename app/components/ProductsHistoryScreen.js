@@ -55,7 +55,7 @@ export default function ProductsHistoryScreen(props) {
       <FlatList
         data = {productList}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.code}
         extraData={productList}>
       </FlatList>
       }

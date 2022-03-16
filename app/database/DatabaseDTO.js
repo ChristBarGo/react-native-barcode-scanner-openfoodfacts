@@ -10,8 +10,8 @@ export default class ProductDatabaseDto {
     async saveProductToDatabase(product) {
         let productIsSaved = false;
 
-        if (product && product != null && product instanceof Product && product.id && product.id != null) {
-            productIsSaved = await this.databaseDAO.saveObject(this.productsRef, product.id, product);
+        if (product && product != null && product instanceof Product && product.code && product.code != null) {
+            productIsSaved = await this.databaseDAO.saveObject(this.productsRef, product.code, product);
         }
 
         return productIsSaved;

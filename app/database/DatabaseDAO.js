@@ -11,8 +11,7 @@ export default class DatabaseDAO {
             if (this.firebaseDB && this.firebaseDB != null) {
                 if (refPath && refPath != null && refId && refId != null && objectToSave && objectToSave != null) {
                     set(ref(this.firebaseDB, refPath + refId), objectToSave)
-                    .then(result => resolve(true))
-                    .catch(error => resolve(false));
+                    .then(result => resolve(true));
                 }
                 else {
                     resolve(false);

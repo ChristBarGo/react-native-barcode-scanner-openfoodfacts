@@ -12,17 +12,19 @@ export default class ProductController {
       .then(productFromApi => {
         console.log("Product From Api: ", productFromApi);
         const productModelObj = this.mapProductReceivedToModel(productFromApi, barcodeData);
-
+        console.log("ProductModelObj: ", productModelObj);
         this.saveScannedProductToRepository(productModelObj)
         .then(scannedProductIsSaved => {
           if (scannedProductIsSaved) {
-            resolve(productModelObj.id);
+            console.log("Product saved!: ", scannedProductIsSaved);
+            resolve(productModelObj.code);
           }
           else {
+            console.log("Product not saved!: ");
             resolve(false);
           }
-        });
-     
+        })
+        .catch(error => console.error(error));
       })
       .catch(error => {
         resolve(false);
@@ -47,8 +49,8 @@ export default class ProductController {
     return productsFromDatabase;
   }
 
-  async getProductFromRepositoryById(productId) {
-    const productFromDatabase = await this.databaseDto.getProductFromDatabase(productId);
+  async getProductFromRepositoryByCode(productCode) {
+    const productFromDatabase = await this.databaseDto.getProductFromDatabase(productCode);
 
     return productFromDatabase;
   }
@@ -60,17 +62,20 @@ export default class ProductController {
       const productObject = productFromApi.product;
 
       if (productObject && productObject != null) {
-        const id = productObject.id;
-        const name = productObject.generic_name != '' || productObject.generic_name == undefined ? productObject.generic_name : id + " - " + productObject.brands;
-        const brand = productObject.brands == undefined || productObject.brands == "" ? "No brand data " : productObject.brands;
-        const imageUrl = productObject.image_front_url;
-        const ingredients = productObject.ingredients != undefined ? productObject.ingredients.map(ingredient => ingredient.id) : "No ingredients data";
-        const ingredientsUrl = productObject.image_ingredients_url;
+        const code = productObject.code;
+        const name = (productObject.product_name || productObject.product_name != '') 
+          ? productObject.product_name : code + " - " + productObject.brands;
+        const brand = (productObject.brands || productObject.brands != "") 
+          ? productObject.brands : "No brand available";
+        const imageUrl = productObject.image_url;
+        const ingredients = productObject.ingredients 
+          ? productObject.ingredients.map(ingredient => ingredient.id).toString().replace(/en:/g, "") : "No ingredients text available";
+        const ingredientsImageUrl = productObject.image_ingredients_url;
         const categories = productObject.categories;
-        const nutritionalImageUrl = productObject.image_nutrition_url;
+        const nutritionalImageUrl = productObject.image_nutrition_url
+          ? productObject.image_nutrition_url : ingredientsImageUrl;
 
-        product = new Product(id, barcodeData, name, brand, imageUrl, ingredients, nutritionalImageUrl);
-        product.categories = categories;
+        product = new Product(code, name, brand, imageUrl, ingredients, ingredientsImageUrl, nutritionalImageUrl, categories);
       }
     }
 
