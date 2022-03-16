@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DatabaseDTO from './app/database/DatabaseDTO';
@@ -29,7 +28,6 @@ export default function App() {
               <ProductHistoryNavigator controller={productController}></ProductHistoryNavigator>}
             />
         </Tab.Navigator>
-        <StatusBar style="auto" />
       </NavigationContainer>
     </SafeAreaProvider>
   );

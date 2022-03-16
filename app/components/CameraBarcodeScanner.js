@@ -54,7 +54,6 @@ export default function CameraBarcodeScanner(props) {
     console.log("Scanned: ", scanned);
 
     const savedProductId = await controller.saveProductToRepository(data);
-    console.log("saveProductId: ", savedProductId);
     if (savedProductId) {
       const productFromRepository = await controller.getProductFromRepositoryById(savedProductId);
 
@@ -67,7 +66,6 @@ export default function CameraBarcodeScanner(props) {
       }
     }
     else {
-      console.log("Type: ", type, " data: ", data);
       showAlertWhenScannedProductIsInvalid(type, data);
     }
   };
