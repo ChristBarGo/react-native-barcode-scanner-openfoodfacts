@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, ActivityIndicator } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CameraBarcodeScanner(props) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
+
+  const controller = props.controller;
+  const navigation = props.navigation;
 
   const requestCameraPermission = () => {
     (async () => {
@@ -18,18 +23,37 @@ export default function CameraBarcodeScanner(props) {
     requestCameraPermission();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    alert("Bar code with type ${type} and data ${data} has been scanned!");
-    props.controller.saveProductToRepository(data);
+    setIsLoadingProduct(true);
+
+    const savedProductId = await controller.saveProductToRepository(data);
+    console.log("saveProductId: ", savedProductId);
+    if (savedProductId) {
+      const productFromRepository = await controller.getProductFromRepositoryById(savedProductId);
+
+      if (productFromRepository) {
+        setIsLoadingProduct(false);
+        navigation.navigate('Product Item', {
+          'item': productFromRepository
+        })
+      }
+    }
+    else {
+      alert("Bar code with type and data ${data} is not a valid product");
+    }
   };
+
+  const LoadingView = (
+    <View style={styles.container}>
+        <ActivityIndicator size="large" color="gray" />
+    </View>
+  )
 
   // This block will be executed while we are asking for camera permission
   if (hasCameraPermission === null) {
     return  (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="gray" />
-      </View>
+      LoadingView
     )
   }
 
@@ -45,7 +69,7 @@ export default function CameraBarcodeScanner(props) {
 
   // Load BarcodeScanner View when there is camera permission enabled
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.barcodeScannerBox}>
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -55,7 +79,7 @@ export default function CameraBarcodeScanner(props) {
       <View style={styles.scanAgainButton}>
         {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)}/>}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

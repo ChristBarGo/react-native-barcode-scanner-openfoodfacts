@@ -7,14 +7,28 @@ export default class ProductDatabaseDto {
         this.productsRef = "products/";
     }
     
-    saveProductToDatabase(product) {
+    async saveProductToDatabase(product) {
+        let productIsSaved = false;
+
         if (product && product != null && product instanceof Product && product.id && product.id != null) {
-            this.databaseDAO.saveObject(this.productsRef, product.id, product);
+            productIsSaved = await this.databaseDAO.saveObject(this.productsRef, product.id, product);
         }
+
+        return productIsSaved;
     }
 
     async getAllProductsFromDatabase() {
-        const productsData = await this.databaseDAO.getAllData(this.productsRef);
+        const productsData = await this.databaseDAO.getData(this.productsRef);
         return productsData;
+    }
+
+    async getProductFromDatabase(productId) {
+        let productData = null;
+
+        if (productId && productId != "") {
+            productData = await this.databaseDAO.getData(this.productsRef + productId);
+        }
+
+        return productData;
     }
 }

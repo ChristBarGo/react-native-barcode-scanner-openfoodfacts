@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, TouchableHighlight } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import ProductListCardItem from './ProductListCardItem';
 
 export default function ProductsHistoryScreen(props) {
@@ -7,7 +8,7 @@ export default function ProductsHistoryScreen(props) {
   const [productList, setProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const controller = props.controller;
+  const controller = props.route.params.controller;
 
   useEffect(() => {
     const productsFromRepository = controller.getAllProductsFromRepository();
@@ -22,12 +23,19 @@ export default function ProductsHistoryScreen(props) {
   }, [])
  
   const renderItem = ({ item }) => (
-    <ProductListCardItem 
-      name={item.name} 
-      brand={item.brand} 
-      imageUrl={item.imageUrl}>
-      onPress={() => setSelectedId(item.id)}  
-    </ProductListCardItem>
+    <TouchableOpacity 
+      onPress={() => {
+        props.navigation.navigate('Product Item', {
+          'item': item
+        })
+      }}>
+      <ProductListCardItem
+        name={item.name} 
+        brand={item.brand} 
+        imageUrl={item.imageUrl}>
+        onPress={() => setSelectedId(item.id)}  
+      </ProductListCardItem>
+    </TouchableOpacity>
   );
 
   if (!isLoading && (!productList || productList == undefined || productList.length == 0)) {
@@ -65,7 +73,7 @@ function mapProductsFromRepositoryToArrayOfObjects(productsFromRepository) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'skyblue',
+        backgroundColor: '#99CCFF',
         alignItems: 'center',
         justifyContent: 'space-between',
         margin: 0

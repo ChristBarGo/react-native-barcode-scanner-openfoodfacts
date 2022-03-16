@@ -7,14 +7,25 @@ export default class DatabaseDAO {
     }
 
     saveObject(refPath, refId, objectToSave) {
-        if (this.firebaseDB && this.firebaseDB != null) {
-            if (refPath && refPath != null && refId && refId != null && objectToSave && objectToSave != null) {
-                set(ref(this.firebaseDB, refPath + refId), objectToSave);
+        return new Promise(resolve => {
+            if (this.firebaseDB && this.firebaseDB != null) {
+                if (refPath && refPath != null && refId && refId != null && objectToSave && objectToSave != null) {
+                    set(ref(this.firebaseDB, refPath + refId), objectToSave)
+                    .then(result => resolve(true))
+                    .catch(error => resolve(false));
+                }
+                else {
+                    resolve(false);
+                }
             }
-        }
+            else {
+                resolve(false);
+            }
+        })
+        
     }
 
-    getAllData(refPath) {
+    getData(refPath) {
         return new Promise((resolve, reject) => {
             const onData = snapshot => resolve(snapshot.val());
             const onError = error => reject(error);

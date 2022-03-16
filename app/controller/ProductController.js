@@ -6,31 +6,50 @@ export default class ProductController {
     this.databaseDto = databaseDto;
   }
 
-  async saveProductToRepository(barcodeData) {
-    await getProductInfoByBarcode(barcodeData)
+  saveProductToRepository(barcodeData) {
+    return new Promise(resolve => {
+      getProductInfoByBarcode(barcodeData)
       .then(productFromApi => {
-        const productModelObj = this.mapProductReceivedToModel(productFromApi);
-        this.saveScannedProductToRepository(productModelObj);
+        const productModelObj = this.mapProductReceivedToModel(productFromApi, barcodeData);
+        const scannedProductIsSaved = this.saveScannedProductToRepository(productModelObj);
+
+        if (scannedProductIsSaved) {
+          resolve(productModelObj.id);
+        }
+        else {
+          resolve(false);
+        }
       })
       .catch(error => {
+        resolve(false);
         console.error(error);
       })
+    });
   }
 
-  saveScannedProductToRepository(product) {
+  async saveScannedProductToRepository(product) {
+    let productIsSaved = false;
+
     if (product && product != null) {
-      this.databaseDto.saveProductToDatabase(product);
+      productIsSaved = await this.databaseDto.saveProductToDatabase(product);
     }
+
+    return productIsSaved;
   }
 
   async getAllProductsFromRepository() {
     const productsFromDatabase = await this.databaseDto.getAllProductsFromDatabase();
 
-    console.log("Products from controller: " ,productsFromDatabase);
     return productsFromDatabase;
   }
 
-  mapProductReceivedToModel(productFromApi) {
+  async getProductFromRepositoryById(productId) {
+    const productFromDatabase = await this.databaseDto.getProductFromDatabase(productId);
+
+    return productFromDatabase;
+  }
+
+  mapProductReceivedToModel(productFromApi, barcodeData) {
     let product = null;
 
     if (productFromApi && productFromApi != null) {
@@ -46,7 +65,7 @@ export default class ProductController {
         const categories = productObject.categories;
         const nutritionalImageUrl = productObject.image_nutrition_url;
 
-        product = new Product(id, name, brand, imageUrl, ingredients, nutritionalImageUrl);
+        product = new Product(id, barcodeData, name, brand, imageUrl, ingredients, nutritionalImageUrl);
         product.categories = categories;
       }
     }
