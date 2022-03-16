@@ -11,6 +11,7 @@ export default function BarcodeScannerNavigator(props) {
                 name = "Camera Barcode Scanner"
                 component={BarcodeScannerScreen}
                 initialParams={{'controller': props.controller}}
+                tabBar={() => null}
                 options={{headerShown: false}}> 
             </Stack.Screen>
             <Stack.Screen 

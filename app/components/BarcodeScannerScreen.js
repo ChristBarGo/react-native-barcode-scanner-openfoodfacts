@@ -11,7 +11,6 @@ export default function BarcodeScannerScreen(props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'skyblue'
+        flex: 1
     },
 });
