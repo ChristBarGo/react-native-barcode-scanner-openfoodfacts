@@ -10,7 +10,8 @@ export default function BarcodeScannerNavigator(props) {
             <Stack.Screen 
                 name = "Camera Barcode Scanner"
                 component={BarcodeScannerScreen}
-                initialParams={{'controller': props.controller}}> 
+                initialParams={{'controller': props.controller}}
+                options={{headerShown: false}}> 
             </Stack.Screen>
             <Stack.Screen 
                 name = "Product Item"

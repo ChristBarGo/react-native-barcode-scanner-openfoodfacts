@@ -10,7 +10,8 @@ export default function ProductHistoryNavigator(props) {
             <Stack.Screen 
                 name = "Product History"
                 component={ProductsHistoryScreen}
-                initialParams={{'controller': props.controller}}> 
+                initialParams={{'controller': props.controller}}
+                options={{headerShown: false}}> 
             </Stack.Screen>
             <Stack.Screen 
                 name = "Product Item"
