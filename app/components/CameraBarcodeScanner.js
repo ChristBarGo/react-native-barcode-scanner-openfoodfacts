@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, ActivityIndicator } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Text, View, StyleSheet, Button, ActivityIndicator, Alert } from 'react-native';
+import { Camera } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CameraBarcodeScanner(props) {
@@ -13,7 +13,7 @@ export default function CameraBarcodeScanner(props) {
 
   const requestCameraPermission = () => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(status == 'granted');
     })()
   }
@@ -23,10 +23,31 @@ export default function CameraBarcodeScanner(props) {
     requestCameraPermission();
   }, []);
 
+  const showAlertWhenScannedProductIsInvalid = (barcodeType, barcode) => {
+    const alertTitle = "Invalid product barcode";
+    const alertMessage = "The barcode type ${barcodeType} and data ${barcode} is not valid.";
+    Alert.alert(
+      alertTitle,
+      alertMessage,
+      [
+        {
+          text: 'Accept',
+          onPress: () => {
+            setIsLoadingProduct(false);
+            setScanned(false);
+          }
+        }
+      ]
+    )
+  } 
+
   const handleBarCodeScanned = async ({ type, data }) => {
-    console.log("HabdleBarScanned");
+    console.log("HabdleBarScanned: type: ", type, " data: ", data);
+
     setScanned(true);
     setIsLoadingProduct(true);
+
+    console.log("Scanned: ", scanned);
 
     const savedProductId = await controller.saveProductToRepository(data);
     console.log("saveProductId: ", savedProductId);
@@ -42,9 +63,8 @@ export default function CameraBarcodeScanner(props) {
       }
     }
     else {
-      setIsLoadingProduct(false);
-      setScanned(false);
-      alert("Bar code with type and data ${data} is not a valid product");
+      console.log("type: ", barcodeType);
+      showAlertWhenScannedProductIsInvalid(type, data);
     }
   };
 
@@ -78,8 +98,9 @@ export default function CameraBarcodeScanner(props) {
       ? LoadingView
       :
         <View style={styles.barcodeScannerBox}>
-          <BarCodeScanner
+          <Camera
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            autoFocus={Camera.Constants.AutoFocus.auto}
             style={StyleSheet.absoluteFill}
           />
         </View>

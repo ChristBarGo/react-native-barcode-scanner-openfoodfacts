@@ -10,8 +10,9 @@ export default class ProductController {
     return new Promise(resolve => {
       getProductInfoByBarcode(barcodeData)
       .then(productFromApi => {
+        console.log("Product From Api: ", productFromApi);
         const productModelObj = this.mapProductReceivedToModel(productFromApi, barcodeData);
-        
+
         this.saveScannedProductToRepository(productModelObj)
         .then(scannedProductIsSaved => {
           if (scannedProductIsSaved) {
