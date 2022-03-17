@@ -5,6 +5,7 @@ import ProductController from './app/controller/ProductController';
 import ProductHistoryNavigator from './app/navigation/ProductHistoryNavigator';
 import BarcodeScannerNavigator from './app/navigation/BarcodeScannerNavigator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,12 +18,22 @@ export default function App() {
         <Tab.Navigator>
           <Tab.Screen 
             name="Product Barcode Scanner"
-            options={{unmountOnBlur: true}}
+            options={{
+              unmountOnBlur: true,
+              tabBarIcon: ({color, size}) => (
+                <Ionicons name="barcode-outline" color={color} size={size} />
+              )
+            }}
             children={() => 
               <BarcodeScannerNavigator controller={productController}></BarcodeScannerNavigator>} 
           />
           <Tab.Screen 
-            options={{unmountOnBlur: true}} 
+            options={{
+              unmountOnBlur: true,
+              tabBarIcon: ({color, size}) => (
+                <MaterialCommunityIcons name="food-apple" color={color} size={size} />
+              )
+            }} 
             name="Scanned Products" 
             children={() =>
               <ProductHistoryNavigator controller={productController}></ProductHistoryNavigator>}
