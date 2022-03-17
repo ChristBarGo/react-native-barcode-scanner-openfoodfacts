@@ -75,7 +75,7 @@ export default class ProductController {
         const ingredientsImageUrl = productObject.image_ingredients_url
           ? productObject.image_ingredients_url : "";
         const categories = productObject.categories 
-          ? productObject.categories : "";
+          ? productObject.categories : "No categories available";
         const nutritionalImageUrl = productObject.image_nutrition_url
           ? productObject.image_nutrition_url : ingredientsImageUrl;
 
