@@ -86,10 +86,10 @@ export default function CameraBarcodeScanner(props) {
   // This block will be executed when there is no camera permission
   if (hasCameraPermission === false) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <Text>Could not access to camera</Text>
         <Button title="Access to Camera" onPress={() => requestCameraPermission()}></Button>
-      </SafeAreaView>
+      </View>
     )
   }
 
@@ -106,7 +106,7 @@ export default function CameraBarcodeScanner(props) {
     )
   // Load BarcodeScanner View when there is camera permission enabled
   return (
-    <SafeAreaView 
+    <View 
       style={styles.container}
       forceInset={{ vertical: 'never' }}>
       {isLoadingProduct
@@ -114,14 +114,13 @@ export default function CameraBarcodeScanner(props) {
       :
         CameraView
       }
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'black',
+    flex: 1
   },
 
   barcodeScannerBox: {

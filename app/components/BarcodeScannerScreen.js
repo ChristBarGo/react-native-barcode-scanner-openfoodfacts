@@ -1,16 +1,12 @@
 import CameraBarcodeScanner from './CameraBarcodeScanner';
-import { View, StyleSheet } from 'react-native';
+import globalStyles from '../styles/styles';
+import { SafeAreaView } from 'react-native';
 
 export default function BarcodeScannerScreen(props) {
+
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={globalStyles.rootStyle}>
         <CameraBarcodeScanner controller={props.route.params.controller} navigation={props.navigation}></CameraBarcodeScanner>
-      </View>
+      </SafeAreaView>
     );  
   }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-});

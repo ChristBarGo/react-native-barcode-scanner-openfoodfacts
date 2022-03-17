@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, TouchableHighlight, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ProductListCardItem from './ProductListCardItem';
+import globalStyles from '../styles/styles';
+
+const FLATLIST_NUM_COLUMNS = 2;
+const windowDimensions = Dimensions.get("window");
+const WINDOW_WIDTH = windowDimensions.width;
+const WINDOW_HEIGHT = windowDimensions.height;
 
 export default function ProductsHistoryScreen(props) {
   const [selectedId, setSelectedId] = useState(null); // To force re-render flatlist
@@ -9,6 +15,7 @@ export default function ProductsHistoryScreen(props) {
   const [isLoading, setIsLoading] = useState(true);
 
   const controller = props.route.params.controller;
+
 
   useEffect(() => {
     const productsFromRepository = controller.getAllProductsFromRepository();
@@ -24,6 +31,7 @@ export default function ProductsHistoryScreen(props) {
  
   const renderItem = ({ item }) => (
     <TouchableOpacity 
+      style={styles.productCardItem}
       onPress={() => {
         props.navigation.navigate('Product Item', {
           'item': item
@@ -40,23 +48,26 @@ export default function ProductsHistoryScreen(props) {
 
   if (!isLoading && (!productList || productList == undefined || productList.length == 0)) {
     return  (
-      <View style={styles.noProductScanned}>
+      <SafeAreaView style={styles.noProductScanned}>
         <Text style={{ fontSize: 25 }}>No Product Scanned</Text>
         <Text style={{ fontSize: 15, fontStyle: 'italic'}}>Scan a product first from product barcode scanner tab</Text>
-      </View>
+      </SafeAreaView>
     )
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={globalStyles.rootStyle}>
       {isLoading 
         ? <ActivityIndicator style={styles.loadingViewIndicator} size="large" color="gray" /> 
         :
       <FlatList
+        style={{flex: 1}}
+        key={'#'}
         data = {productList}
         renderItem={renderItem}
-        keyExtractor={item => item.code}
-        extraData={productList}>
+        keyExtractor={item => "#" +item.code}
+        extraData={productList}
+        numColumns={FLATLIST_NUM_COLUMNS}>
       </FlatList>
       }
     </SafeAreaView>
@@ -73,10 +84,6 @@ function mapProductsFromRepositoryToArrayOfObjects(productsFromRepository) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#99CCFF',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        margin: 0
     },
 
     loadingViewIndicator: {
@@ -85,16 +92,18 @@ const styles = StyleSheet.create({
       justifyContent: 'center'
     },
 
-    productFlatList: {
+    productCardItem: {
       flex: 1,
-      flexDirection: 'row'
+      height: WINDOW_HEIGHT / 3,
+      width: WINDOW_WIDTH / FLATLIST_NUM_COLUMNS,
+      padding: WINDOW_WIDTH * 0.02
     },
 
     noProductScanned: {
       flex: 1,
-        backgroundColor: 'skyblue',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: 0
+      backgroundColor: 'skyblue',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 0
     }
 });
