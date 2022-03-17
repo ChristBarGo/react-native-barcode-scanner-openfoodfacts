@@ -29,7 +29,7 @@ export default function CameraBarcodeScanner(props) {
   const showAlertWhenScannedProductIsInvalid = (barcodeType, barcode) => {
     console.log("Barcodetype: ", barcodeType);
     const alertTitle = "Invalid product barcode";
-    const alertMessage = "The barcode type " + barcodeType + " and data " + barcode + " is not valid.";
+    const alertMessage = "The barcode type " + barcodeType + " and data " + barcode + " is not valid or product is not registered.";
     Alert.alert(
       alertTitle,
       alertMessage,

@@ -62,16 +62,20 @@ export default class ProductController {
       const productObject = productFromApi.product;
 
       if (productObject && productObject != null) {
-        const code = productObject.code;
+        const code = productObject.code
+          ? productObject.code : barcodeData;
         const name = (productObject.product_name || productObject.product_name != '') 
           ? productObject.product_name : code + " - " + productObject.brands;
         const brand = (productObject.brands || productObject.brands != "") 
           ? productObject.brands : "No brand available";
-        const imageUrl = productObject.image_url;
+        const imageUrl = productObject.image_url
+          ? productObject.image_url : "";
         const ingredients = productObject.ingredients 
           ? productObject.ingredients.map(ingredient => ingredient.id).toString().replace(/en:/g, "") : "No ingredients text available";
-        const ingredientsImageUrl = productObject.image_ingredients_url;
-        const categories = productObject.categories;
+        const ingredientsImageUrl = productObject.image_ingredients_url
+          ? productObject.image_ingredients_url : "";
+        const categories = productObject.categories 
+          ? productObject.categories : "";
         const nutritionalImageUrl = productObject.image_nutrition_url
           ? productObject.image_nutrition_url : ingredientsImageUrl;
 

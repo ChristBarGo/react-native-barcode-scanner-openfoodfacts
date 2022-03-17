@@ -8,7 +8,7 @@ export default class Product {
     nutritionalImageUrl;
     categories;
 
-    constructor(code, name, brand = "No brand available", imageUrl = "", ingredients = "No ingredients text available", ingredientsImageUrl = "", nutritionalImageUrl = "", categories) {
+    constructor(code, name, brand = "No brand available", imageUrl = "", ingredients = "No ingredients text available", ingredientsImageUrl = "", nutritionalImageUrl = "", categories = "No category available") {
         this.code = code;
         this.name = name;
         this.brand = brand;
