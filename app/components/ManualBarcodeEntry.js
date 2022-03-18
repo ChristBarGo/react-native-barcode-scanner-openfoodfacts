@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, View, Alert, StyleSheet, TextInput, Dimensions, ActivityIndicator } from "react-native";
+import { Button, View, Alert, StyleSheet, TextInput, Dimensions, ActivityIndicator, Platform } from "react-native";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const WINDOW = Dimensions.get('window');
 const WINDOW_WIDTH = WINDOW.width;
@@ -10,10 +11,13 @@ const MODAL_PERCENTAGE_HEIGHT = 0.2;
 export default function ManualBarcodeEntry(props) { 
     const ADD_BARCODE_BUTTON_TITLE = "Add a barcode";
     const TEXTINPUT_PLACEHOLDER = "Enter a product barcode";
+    const ALERT_TITLE = "Invalid product barcode or unregistered";
+    const ALERT_MESSAGE = "The barcode is not valid or product is not registered.";
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [textInputValue, setTextInputValue] = useState("");
     const [isLoadingProduct, setIsLoadingProduct] = useState(false);
+    const [isWebAlertVisible, setIsWebAlertVisible] = useState(false);
 
     const controller = props.controller;
     const navigation = props.navigation;
@@ -32,30 +36,42 @@ export default function ManualBarcodeEntry(props) {
                 'item': productFromRepository
                 })
                 setIsLoadingProduct(false);
-                setIsModalVisible(false);
-                setTextInputValue("");
+
             }
         }
         else {
             showAlertWhenBarcodeIsInvalidOrUnregistered(barcode);
         }
+
+        setIsModalVisible(false);
+        setTextInputValue("");
     }
 
-    const showAlertWhenBarcodeIsInvalidOrUnregistered = (barcode) => {
-        const alertTitle = "Invalid product barcode or unregistered";
-        const alertMessage = "The barcode " + barcode + " is not valid or product is not registered.";
+    const alertOnConfirmPress = () => {
+        setIsLoadingProduct(false);
+    }
+
+    const showMobileAlert = (barcode) => {
         Alert.alert(
-            alertTitle,
-            alertMessage,
+            ALERT_TITLE,
+            ALERT_MESSAGE,
             [
                 {
                     text: 'Accept',
-                    onPress: () => {
-                        setIsLoadingProduct(false);
-                    }
+                    onPress: alertOnConfirmPress
                 }
             ]
         )
+    }
+
+    const showAlertWhenBarcodeIsInvalidOrUnregistered = (barcode) => {
+        if (Platform.OS == 'web') {
+            setIsWebAlertVisible(true);
+            console.log("Alert web: ", isWebAlertVisible);
+        }        
+        else {
+            showMobileAlert(barcode);
+        }
     }
 
     const LoadingView = (
@@ -100,6 +116,23 @@ export default function ManualBarcodeEntry(props) {
                         </Button>
                     </View>
                 </View>
+            }
+            {Platform.OS == 'web' &&
+                <AwesomeAlert
+                    show={isWebAlertVisible}
+                    showProgress={false}
+                    title={ALERT_TITLE}
+                    message={ALERT_MESSAGE}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showConfirmButton={true}
+                    confirmText="Confirm"
+                    confirmButtonColor="skyblue"
+                    onConfirmPressed={() => {
+                            setIsWebAlertVisible(false), alertOnConfirmPress()
+                        }
+                    }
+                />
             }
         </View>
     );
