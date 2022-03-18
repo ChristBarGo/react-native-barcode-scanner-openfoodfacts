@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
     brand: {
         flex: 1,
         textAlign: "center",
-        textAlignVertical: "center"
+        textAlignVertical: "center",
     }
 });

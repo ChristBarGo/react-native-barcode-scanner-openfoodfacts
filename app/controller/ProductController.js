@@ -49,6 +49,10 @@ export default class ProductController {
     return productsFromDatabase;
   }
 
+  retrieveAllDataFromRepositoryWhenChange(data) {
+    this.databaseDto.retrieveAllDataWhenChangeFromRepository(data);
+  }
+
   async getProductFromRepositoryByCode(productCode) {
     const productFromDatabase = await this.databaseDto.getProductFromDatabase(productCode);
 

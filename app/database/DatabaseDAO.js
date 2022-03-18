@@ -34,37 +34,21 @@ export default class DatabaseDAO {
             onValue(databaseRef, onData, onError);
 
         });
-        /*let data;
+    }
 
-        if (refPath && refPath != null) {
-            const databaseRef = ref(this.firebaseDB, refPath);
-            
-            onValue(databaseRef, 
-                (snapshot) => {
-                    data = snapshot.val();
-                },
-                (errorObject) => {
-                    console.error("An error occurred when retrieving data from firebase: ", errorObject.name);
-                }
-            );
+    retrieveDataWhenChange(refPath, data) {
+        const onData = snapshot => {
+            const snapshotValues = Object.values(snapshot.val());
+
+            snapshotValues.forEach(element => {
+                data.push(element);
+            });
         }
 
-        return data;*/
+        const onError = error => console.error(error);
 
-        /*let data = null;
+        const databaseRef = ref(this.firebaseDB, refPath);
 
-        if (refPath && refPath != null) {
-            const databaseRef = ref(this.firebaseDB, refPath);
-            onValue(databaseRef, 
-                (snapshot) => {
-                    data = snapshot.val();
-                },
-                (errorObject) => {
-                    console.error("An error occurred when retrieving data from firebase: ", errorObject.name);
-                }
-            );
-        }
-
-        return data;*/
+        onValue(databaseRef, onData, onError);
     }
 }

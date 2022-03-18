@@ -10,23 +10,39 @@ const WINDOW_WIDTH = windowDimensions.width;
 const WINDOW_HEIGHT = windowDimensions.height;
 
 export default function ProductsHistoryScreen(props) {
-  const [selectedId, setSelectedId] = useState(null); // To force re-render flatlist
   const [productList, setProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingProducts, setIsFetchingProducts] = useState(true);
 
   const controller = props.route.params.controller;
 
 
   useEffect(() => {
-    const productsFromRepository = controller.getAllProductsFromRepository();
-    productsFromRepository
-    .then(result => {
-      setProductList(mapProductsFromRepositoryToArrayOfObjects(result));
+    /*let productsFromRepository = [];
+    controller.retrieveAllDataFromRepositoryWhenChange(productsFromRepository);
+    
+    console.log("ProductsFromRepository: ", productsFromRepository);
+    if (productsFromRepository) {
+      setProductList(productsFromRepository);
+      console.log("ProductList: ", productList);
       setIsLoading(false);
-    })
-    .catch(error => {
-      console.log("An Error when receiving products from database: ", error);
-    });
+    }
+    else {
+      console.log("An Error occurred when receiving products from database");
+    }*/
+    setIsFetchingProducts(true);
+    const productsFromRepository = controller.getAllProductsFromRepository();
+    console.log("UseEffect");
+    productsFromRepository
+      .then(result => {
+        console.log("productsFromRepository: ", productsFromRepository);
+        setProductList(mapProductsFromRepositoryToArrayOfObjects(result));
+        setIsLoading(false);
+        setIsFetchingProducts(false)
+      })
+      .catch(error => {
+        console.log("An Error when receiving products from database: ", error);
+      });
   }, [])
  
   const renderItem = ({ item }) => (
@@ -41,14 +57,13 @@ export default function ProductsHistoryScreen(props) {
         name={item.name} 
         brand={item.brand} 
         imageUrl={item.imageUrl}>
-        onPress={() => setSelectedId(item.id)}  
       </ProductListCardItem>
     </TouchableOpacity>
   );
 
   if (!isLoading && (!productList || productList == undefined || productList.length == 0)) {
     return  (
-      <SafeAreaView style={styles.noProductScanned}>
+      <SafeAreaView style={[globalStyles.rootStyle, styles.noProductScanned]}>
         <Text style={{ fontSize: 25 }}>No Product Scanned</Text>
         <Text style={{ fontSize: 15, fontStyle: 'italic'}}>Scan a product first from product barcode scanner tab</Text>
       </SafeAreaView>
@@ -62,11 +77,11 @@ export default function ProductsHistoryScreen(props) {
         :
       <FlatList
         style={{flex: 1}}
-        key={'#'}
+        key={productList.length}
         data = {productList}
         renderItem={renderItem}
-        keyExtractor={item => "#" +item.code}
-        extraData={productList}
+        keyExtractor={item => item.code}
+        extraData={isFetchingProducts}
         numColumns={FLATLIST_NUM_COLUMNS}>
       </FlatList>
       }
@@ -95,12 +110,11 @@ const styles = StyleSheet.create({
     productCardItem: {
       height: WINDOW_HEIGHT / 3,
       width: WINDOW_WIDTH / FLATLIST_NUM_COLUMNS,
-      padding: WINDOW_WIDTH * 0.02
+      padding: WINDOW_WIDTH * 0.01,
     },
 
     noProductScanned: {
       flex: 1,
-      backgroundColor: 'skyblue',
       alignItems: 'center',
       justifyContent: 'center',
       margin: 0

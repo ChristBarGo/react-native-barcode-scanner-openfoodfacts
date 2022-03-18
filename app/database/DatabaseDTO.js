@@ -31,4 +31,8 @@ export default class ProductDatabaseDto {
 
         return productData;
     }
+
+    retrieveAllDataWhenChangeFromRepository(data) {
+        this.databaseDAO.retrieveDataWhenChange(this.productsRef, data);
+    }
 }
