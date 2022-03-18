@@ -33,6 +33,7 @@ export default function ManualBarcodeEntry(props) {
                 })
                 setIsLoadingProduct(false);
                 setIsModalVisible(false);
+                setTextInputValue("");
             }
         }
         else {
@@ -113,22 +114,22 @@ const styles = StyleSheet.create({
 
     modalView: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
         width: WINDOW_WIDTH * MODAL_PERCENTAGE_WIDTH,
         height: WINDOW_HEIGHT * MODAL_PERCENTAGE_HEIGHT,
+        marginVertical: WINDOW_HEIGHT * 0.02,
     },
     textInput: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+        flex: 2,
         textAlign: "center",
         textAlignVertical: "center",
+        fontSize: 25,
+        borderColor: 'black',
+        borderWidth: 3
     },
     buttonsView: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center"
     },
     modalButton: {
