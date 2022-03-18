@@ -8,9 +8,7 @@ export default async function getProductInfoByBarcode(barcode) {
     const INVALID_PRODUCT_STATUS = 0;
 
     const httpHeaders = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        UserAgent: "OpenFoodFacts Barcode Scanner App - Cross-Platform - Version 1.0"
+        Accept: 'application/json'
     }
     try {
         const response = await fetch(ENTIRE_URL, {

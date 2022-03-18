@@ -28,7 +28,7 @@ export default function CameraBarcodeScanner(props) {
 
   const showAlertWhenScannedProductIsInvalid = (barcodeType, barcode) => {
     console.log("Barcodetype: ", barcodeType);
-    const alertTitle = "Invalid product barcode";
+    const alertTitle = "Invalid product barcode or unregistered";
     const alertMessage = "The barcode type " + barcodeType + " and data " + barcode + " is not valid or product is not registered.";
     Alert.alert(
       alertTitle,
@@ -86,7 +86,7 @@ export default function CameraBarcodeScanner(props) {
   // This block will be executed when there is no camera permission
   if (hasCameraPermission === false) {
     return (
-      <View style={styles.container}>
+      <View style={styles.loadingView}>
         <Text>Could not access to camera</Text>
         <Button title="Access to Camera" onPress={() => requestCameraPermission()}></Button>
       </View>
