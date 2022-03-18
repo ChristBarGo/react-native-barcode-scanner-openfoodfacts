@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         flex: 1,
         fontWeight: 'bold',
         textAlign: "center",
-        textAlignVertical: "center"
+        textAlignVertical: "center",
     },
 
     image: {

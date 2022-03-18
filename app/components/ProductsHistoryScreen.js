@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, TouchableHighlight, Dimensions } from 'react-native';
+import { Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Platform, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ProductListCardItem from './ProductListCardItem';
 import globalStyles from '../styles/styles';
 
-const FLATLIST_NUM_COLUMNS = 2;
+const FLATLIST_NUM_COLUMNS = (Platform.OS == 'web') ? 4 : 2;
 const windowDimensions = Dimensions.get("window");
 const WINDOW_WIDTH = windowDimensions.width;
 const WINDOW_HEIGHT = windowDimensions.height;
@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     },
 
     productCardItem: {
-      flex: 1,
       height: WINDOW_HEIGHT / 3,
       width: WINDOW_WIDTH / FLATLIST_NUM_COLUMNS,
       padding: WINDOW_WIDTH * 0.02
