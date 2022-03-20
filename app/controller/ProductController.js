@@ -49,6 +49,10 @@ export default class ProductController {
     return productsFromDatabase;
   }
 
+  getFirebaseDatabase() {
+    return this.databaseDto.getDatabase();
+  }
+
   retrieveAllDataFromRepositoryWhenChange(data) {
     this.databaseDto.retrieveAllDataWhenChangeFromRepository(data);
   }

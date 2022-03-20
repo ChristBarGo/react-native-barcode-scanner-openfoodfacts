@@ -6,6 +6,10 @@ export default class DatabaseDAO {
         this.firebaseDB = getDatabase(firebaseApp);
     }
 
+    getDatabase() {
+        return this.firebaseDB;
+    }
+
     saveObject(refPath, refId, objectToSave) {
         return new Promise(resolve => {
             if (this.firebaseDB && this.firebaseDB != null) {

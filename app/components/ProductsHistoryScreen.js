@@ -3,6 +3,7 @@ import { Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, Platform, 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ProductListCardItem from './ProductListCardItem';
 import globalStyles from '../styles/styles';
+import { onValue, ref} from 'firebase/database';
 
 const FLATLIST_NUM_COLUMNS = (Platform.OS == 'web') ? 4 : 2;
 const windowDimensions = Dimensions.get("window");
@@ -16,8 +17,27 @@ export default function ProductsHistoryScreen(props) {
 
   const controller = props.route.params.controller;
 
+  const setFirebaseOnValueListener = () => {
+    const PRODUCTS_FIREBASE_REF = "products/"
+    const firebaseDB = controller.getFirebaseDatabase();
+
+    const onData = snapshot => {
+      const snapshotValues = Object.values(snapshot.val());
+      console.log("snapshotValues: ", snapshotValues);
+      setProductList(snapshotValues);
+      setIsLoading(false);
+  }
+
+    const onError = error => console.error(error);
+
+    console.log("FirebaseDB: ", firebaseDB, " REF: ", PRODUCTS_FIREBASE_REF);
+    const databaseRef = ref(firebaseDB, PRODUCTS_FIREBASE_REF);
+
+    onValue(databaseRef, onData, onError);
+  }
 
   useEffect(() => {
+    setFirebaseOnValueListener();
     /*let productsFromRepository = [];
     controller.retrieveAllDataFromRepositoryWhenChange(productsFromRepository);
     
@@ -30,7 +50,7 @@ export default function ProductsHistoryScreen(props) {
     else {
       console.log("An Error occurred when receiving products from database");
     }*/
-    setIsFetchingProducts(true);
+    /*setIsFetchingProducts(true);
     const productsFromRepository = controller.getAllProductsFromRepository();
     console.log("UseEffect");
     productsFromRepository
@@ -42,7 +62,7 @@ export default function ProductsHistoryScreen(props) {
       })
       .catch(error => {
         console.log("An Error when receiving products from database: ", error);
-      });
+      });*/
   }, [])
  
   const renderItem = ({ item }) => (
